@@ -1,0 +1,5 @@
+@use "tailwindcss";
+
+.invalid {
+    @apply border-red-500;
+}

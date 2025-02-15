@@ -1,0 +1,109 @@
+<div class="flex flex-col items-center mt-10">
+    <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="flex flex-col">
+        <div class="flex items-center">
+            <label class="input" [class]="{'invalid': krsNumber && krsNumber.invalid && (krsNumber.dirty || krsNumber.touched)}">
+                <span class="label">Numer KRS*:</span>
+                <input type="text" placeholder="" formControlName="krsNumber"/>
+            </label>
+            <div class="flex flex-col ml-4">
+                <label class="label">
+                    <input type="radio" formControlName="register" value="P" class="radio-sm" checked="checked" />
+                    <span class="label">Przedsiębiorcy</span>
+                </label>
+                <label class="label">
+                    <input type="radio" formControlName="register" value="S" class="radio-sm" />
+                    <span class="label">Stowarzyszenia</span>
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline btn-info my-2" [disabled]="!searchForm.valid || loading">Szukaj</button>
+
+        @if (krsNumber && krsNumber.invalid && (krsNumber.dirty || krsNumber.touched)) {
+            @if (krsNumber.hasError('required')) {
+                <div role="alert" class="alert alert-error alert-soft">
+                    <span>Numer KRS jest wymagany.</span>
+                </div>
+            }
+            @if (krsNumber.hasError('minlength') || krsNumber.hasError('maxlength') || krsNumber.hasError('pattern')) {
+                <div role="alert" class="alert alert-info alert-soft">
+                    <span>Numer KRS musi składać się z 10 cyfr.</span>
+                </div>
+            }
+        }
+    </form>
+
+    @if (loading) {
+        <span class="loading loading-ring loading-xl my-16"></span>
+    }
+
+    @if (krsCopy) {
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="border-base-300 bg-base-100 border border-base-300 border p-6 rounded-box shadow-md">
+                <div class="font-semibold">Dane podmiotu</div>
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Nazwa</th>
+                                <td>{{ krsCopy.copy.data.section_1.subject_data.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Numer KRS</th>
+                                <td>{{ krsCopy.copy.header_a.krs_number }}</td>
+                            </tr>
+                            <tr>
+                                <th>NIP</th>
+                                <td>{{ krsCopy.copy.data.section_1.subject_data.nip }}</td>
+                            </tr>
+                            <tr>
+                                <th>REGON</th>
+                                <td>{{ krsCopy.copy.data.section_1.subject_data.regon }}</td>
+                            </tr>
+                            <tr>
+                                <th>Forma prawna</th>
+                                <td>{{ krsCopy.copy.data.section_1.subject_data.legal_form }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="border-base-300 bg-base-100 border border-base-300 border p-6 rounded-box shadow-md">
+                <div class="font-semibold">Siedziba i adres</div>
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Województwo</th>
+                                <td>{{ krsCopy.copy.data.section_1.headquarters.province }}</td>
+                            </tr>
+                            <tr>
+                                <th>Powiat</th>
+                                <td>{{ krsCopy.copy.data.section_1.headquarters.district }}</td>
+                            </tr>
+                            <tr>
+                                <th>Gmina</th>
+                                <td>{{ krsCopy.copy.data.section_1.headquarters.borough }}</td>
+                            </tr>
+                            <tr>
+                                <th>Miejscowość</th>
+                                <td>{{ krsCopy.copy.data.section_1.headquarters.town }}</td>
+                            </tr>
+                            <tr>
+                                <th>Adres</th>
+                                <td>{{ krsCopy.copy.data.section_1.address.street }} {{ krsCopy.copy.data.section_1.address.house_number }}</td>
+                            </tr>
+                            <tr>
+                                <th>Kod pocztowy</th>
+                                <td>{{ krsCopy.copy.data.section_1.address.postal_code }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (message) {
+        <app-message [message]="message" class="my-16"></app-message>
+    }
+</div>
